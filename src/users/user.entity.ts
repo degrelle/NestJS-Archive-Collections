@@ -4,25 +4,33 @@ import { UserRole } from './dto/create-user.dto';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
+
   @Column()
-  username: string;
+  username: string
+
   @Column()
-  password_hash: string;
+  password_hash: string
+
   @Column({
     type: 'enum',
     enum: ['ADMIN', 'SUPERVISOR', 'EDITOR', 'SIMPLE_USER'],
     default: 'SIMPLE_USER'
   })
   role: UserRole
+
   @Column()
-  name: string;
+  name: string
+
   @Column()
-  surname: string;
+  surname: string
+
   @Column()
-  telephone: number;
+  telephone: number
+
   @Column()
-  address: string;
+  address: string
+
   @Column()
-  email: string;
+  email: string
 }

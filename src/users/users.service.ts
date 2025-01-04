@@ -7,8 +7,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>) {
-  }
+  constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>) {}
 
   /**
    * Get all users and filter them by role
@@ -47,22 +46,28 @@ export class UsersService {
     return findUser
   }
 
+  async checkIfUserExist(username: string) {
+    let findUser = await this.usersRepository.findOne({ where: { username } });
+    if (findUser) {
+      throw new NotFoundException('User already exists!!!');
+    }
+    return false
+  }
+
   /**
    * Create a new User
    * @param createUserDto CreateUserDto
    */
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { username } = createUserDto
-    const findUser = await this.findOneByUsername(username);
+    const findUser = await this.checkIfUserExist(username);
     if(!findUser) {
       const user = this.usersRepository.create(createUserDto);
       try {
         return await this.usersRepository.save(user);
       } catch (error) {
-        throw new HttpException('Error User Creation', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Error User Creation ' + error, HttpStatus.BAD_REQUEST);
       }
-    } else {
-      throw new HttpException('Existing Username', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -72,7 +77,7 @@ export class UsersService {
    * @param updatedUserDto UpdateUserDto
    */
   async update(id: number, updatedUserDto: UpdateUserDto) {
-    let user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne({ where: { id } });
     // Check that record exist
     if(!user) {
       throw new NotFoundException('User not found!!!');

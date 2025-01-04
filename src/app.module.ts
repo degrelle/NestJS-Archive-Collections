@@ -9,6 +9,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { DegLoggerModule } from './deg-logger/deg-logger.module';
+import { ComicsModule } from './comics/comics.module';
+import { Comics } from './comics/comics.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { DegLoggerModule } from './deg-logger/deg-logger.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User],
+        entities: [User, Comics],
         synchronize: false
       }),
       inject: [ConfigService]
@@ -41,7 +43,8 @@ import { DegLoggerModule } from './deg-logger/deg-logger.module';
       }
     ]),
     AuthModule,
-    DegLoggerModule
+    DegLoggerModule,
+    ComicsModule
   ],
   controllers: [AppController],
   providers: [

@@ -26,7 +26,7 @@ export class User {
   surname: string
 
   @Column()
-  telephone: number
+  telephone: string
 
   @Column()
   address: string

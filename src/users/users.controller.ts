@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Ip, Logger,
+  Ip,
   Param,
   ParseIntPipe,
   Patch,

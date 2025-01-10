@@ -40,12 +40,13 @@ export class UsersService {
    */
   async findOneByUsername(username: string): Promise<User> {
     let findUser = await this.usersRepository.findOne({ where: { username } });
-    if (!findUser) {
-      throw new NotFoundException('User not found!!!');
-    }
     return findUser
   }
 
+  /**
+   * Check if user exists by username
+   * @param username
+   */
   async checkIfUserExist(username: string) {
     let findUser = await this.usersRepository.findOne({ where: { username } });
     if (findUser) {

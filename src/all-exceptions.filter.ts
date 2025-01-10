@@ -28,7 +28,8 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     }
 
     if(exception instanceof HttpException) {
-      myResponseObj.statusCode = exception.getStatus()
+      /* myResponseObj.statusCode = exception.getStatus() alternative dynamic status code */
+      myResponseObj.statusCode = 422
       myResponseObj.response = exception.getResponse()
     } else if(exception instanceof TypeORMError) {
       myResponseObj.statusCode = 422
@@ -38,7 +39,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
       myResponseObj.response = 'Internal Server Error'
     }
 
-    response.status(200).json(myResponseObj);
+    response.status(422).json(myResponseObj);
     this.logger.error(myResponseObj.response, AllExceptionsFilter.name)
 
     super.catch(exception, host)

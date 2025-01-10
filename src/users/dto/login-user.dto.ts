@@ -6,5 +6,5 @@ export class LoginUserDto {
   username: string;
   @IsString()
   @IsNotEmpty()
-  password_hash: string;
+  password: string;
 }

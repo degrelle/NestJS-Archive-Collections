@@ -8,7 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query,
+  Query, UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -16,6 +16,7 @@ import { CreateUserDto, UserRole } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { DegLoggerService } from '../deg-logger/deg-logger.service';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @SkipThrottle()
 @Controller('users')
@@ -25,6 +26,7 @@ export class UsersController {
   private readonly logger = new DegLoggerService(UsersController.name)
 
   @SkipThrottle({ default: false })
+  @UseGuards(AuthGuard)
   @Get() // GET /users
   findAll(@Ip() ip: string, @Query('role') role?: UserRole) {
     this.logger.log(`Request for ALL Users\t${ip}`, UsersController.name)

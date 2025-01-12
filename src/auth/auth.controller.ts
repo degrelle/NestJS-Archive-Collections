@@ -14,12 +14,15 @@ import { LoginUserDto } from '../users/dto/login-user.dto';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
 import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
+import { AuthInfoDto } from '../users/dto/auth-info.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {
   }
 
@@ -35,7 +38,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login') // auth/login
-  async login(@Body(ValidationPipe) loginUserDto: LoginUserDto, @Res() response: Response): Promise<User> {
+  async login(@Body(ValidationPipe) loginUserDto: LoginUserDto, @Res() response: Response): Promise<AuthInfoDto> {
     const { username, password } = loginUserDto;
     // Find User from database
     const findUser = await this.usersService.findOneByUsername(username);
@@ -50,6 +53,13 @@ export class AuthController {
       response.status(HttpStatus.UNAUTHORIZED).send({ "message": "Data not valid!" })
       return
     }
-    response.status(HttpStatus.OK).send(findUser)
+    // Get access token
+    const tokenPayload = {
+      sub: findUser.id,
+      username: findUser.username,
+    }
+    const accessToken = await this.jwtService.signAsync(tokenPayload)
+    const authInfo: AuthInfoDto = { userId: findUser.id, username: findUser.username, role: findUser.role, archCollAuth: accessToken }
+    response.status(HttpStatus.OK).send(authInfo)
   }
 }

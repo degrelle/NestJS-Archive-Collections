@@ -29,6 +29,9 @@ export class Comics {
   currency: string
 
   @Column()
+  language: string
+
+  @Column()
   release_date: string
 
   @Column({

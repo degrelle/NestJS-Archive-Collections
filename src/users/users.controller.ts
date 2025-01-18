@@ -26,7 +26,7 @@ export class UsersController {
   private readonly logger = new DegLoggerService(UsersController.name)
 
   @SkipThrottle({ default: false })
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   @Get() // GET /users
   findAll(@Ip() ip: string, @Query('role') role?: UserRole) {
     this.logger.log(`Request for ALL Users\t${ip}`, UsersController.name)

@@ -15,11 +15,38 @@ export class UsersService {
    */
   async findAll(role?: UserRole) {
     if(role) {
-      const rolesArray = await this.usersRepository.find({ where: { role } });
+      const rolesArray = await this.usersRepository.find(
+        {
+          where: { role },
+          select: {
+            id: true,
+            username: true,
+            password_hash: false,
+            role: true,
+            name: true,
+            surname: true,
+            telephone: true,
+            address: true,
+            email: true
+          }
+        }
+      );
       if(rolesArray.length === 0) throw new NotFoundException('User Role Not Found');
       return rolesArray
     }
-    return await this.usersRepository.find()
+    return await this.usersRepository.find({
+      select: {
+        id: true,
+        username: true,
+        password_hash: false,
+        role: true,
+        name: true,
+        surname: true,
+        telephone: true,
+        address: true,
+        email: true
+      }
+    })
   }
 
   /**
@@ -27,7 +54,22 @@ export class UsersService {
    * @param id number
    */
   async findOne(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne(
+      {
+        where: { id },
+        select: {
+          id: true,
+          username: true,
+          password_hash: false,
+          role: true,
+          name: true,
+          surname: true,
+          telephone: true,
+          address: true,
+          email: true
+        }
+      }
+    )
     if(!user) {
       throw new NotFoundException('User not found!!!');
     }
@@ -48,8 +90,8 @@ export class UsersService {
    * @param username
    */
   async checkIfUserExist(username: string) {
-    let findUser = await this.usersRepository.findOne({ where: { username } });
-    if (findUser) {
+    let foundUser = await this.usersRepository.findOne({ where: { username } });
+    if (foundUser) {
       throw new NotFoundException('User already exists!!!');
     }
     return false
@@ -61,8 +103,8 @@ export class UsersService {
    */
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { username } = createUserDto
-    const findUser = await this.checkIfUserExist(username);
-    if(!findUser) {
+    const foundUser = await this.checkIfUserExist(username);
+    if(!foundUser) {
       const user = this.usersRepository.create(createUserDto);
       try {
         return await this.usersRepository.save(user);
@@ -78,7 +120,22 @@ export class UsersService {
    * @param updatedUserDto UpdateUserDto
    */
   async update(id: number, updatedUserDto: UpdateUserDto) {
-    const user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne(
+        {
+          where: { id },
+          select: {
+            id: true,
+            username: true,
+            password_hash: false,
+            role: true,
+            name: true,
+            surname: true,
+            telephone: true,
+            address: true,
+            email: true
+          }
+        }
+      );
     // Check that record exist
     if(!user) {
       throw new NotFoundException('User not found!!!');

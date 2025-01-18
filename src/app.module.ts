@@ -11,6 +11,9 @@ import { AuthModule } from './auth/auth.module';
 import { DegLoggerModule } from './deg-logger/deg-logger.module';
 import { ComicsModule } from './comics/comics.module';
 import { Comics } from './comics/comics.entity';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
+import { BoardgamesModule } from './boardgames/boardgames.module';
 
 @Module({
   imports: [
@@ -24,7 +27,7 @@ import { Comics } from './comics/comics.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User, Comics],
+        entities: [User, Comics, Category],
         synchronize: false
       }),
       inject: [ConfigService]
@@ -44,7 +47,9 @@ import { Comics } from './comics/comics.entity';
     ]),
     AuthModule,
     DegLoggerModule,
-    ComicsModule
+    ComicsModule,
+    CategoriesModule,
+    BoardgamesModule
   ],
   controllers: [AppController],
   providers: [

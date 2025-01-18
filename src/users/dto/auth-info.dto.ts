@@ -17,4 +17,7 @@ export class AuthInfoDto {
   @IsString()
   @IsNotEmpty()
   archCollAuth: string;
+
+  @IsNumber()
+  expireIn?: number;
 }

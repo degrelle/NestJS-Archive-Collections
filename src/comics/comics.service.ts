@@ -23,11 +23,15 @@ export class ComicsService {
   async findOne(id: number): Promise<Comics> {
     const comic = await this.comicsRepository.findOne({ where: { id } })
     if(!comic) {
-      throw new NotFoundException('User not found!!!')
+      throw new NotFoundException('Comic not found!!!')
     }
     return comic
   }
 
+  /**
+   * Find all comics present in "mancolista" filter
+   * @param mancolista CustomBoolean
+   */
   async findAllMancolista(mancolista: CustomBoolean) {
     const mancoArray = await this.comicsRepository.find({
       where: {
@@ -38,6 +42,11 @@ export class ComicsService {
     return mancoArray
   }
 
+  /**
+   * Check if comic with a specific title and volume number is present
+   * @param title string
+   * @param n_volume number
+   */
   async checkIfComicExists(title: string, n_volume: number) {
     const findComic = await this.comicsRepository.findOne({
       where: {
@@ -65,6 +74,8 @@ export class ComicsService {
       } catch (error) {
         throw new HttpException('Error Comic Creation ' + error, HttpStatus.BAD_REQUEST)
       }
+    } else {
+      throw new NotFoundException('A comic with this title and volume number already exists!!!')
     }
   }
 
@@ -82,6 +93,10 @@ export class ComicsService {
     return await this.comicsRepository.save(modifyComic)
   }
 
+  /**
+   * Delete comic by id
+   * @param id number
+   */
   async delete(id: number): Promise<Comics> {
     const comic = await this.comicsRepository.findOne({ where: { id } })
     if(!comic) {

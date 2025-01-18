@@ -32,6 +32,10 @@ export class CreateComicDto {
 
   @IsString()
   @IsNotEmpty()
+  language: string
+
+  @IsString()
+  @IsNotEmpty()
   release_date: string;
 
   @IsEnum(['SETTIMANALE', 'QUINDICINALE', 'MENSILE', 'SEMETRALE', 'ANNUALE', 'VARIABILE'])

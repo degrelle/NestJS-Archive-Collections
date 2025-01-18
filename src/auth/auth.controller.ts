@@ -16,6 +16,7 @@ import { User } from '../users/user.entity';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { AuthInfoDto } from '../users/dto/auth-info.dto';
+import { DecodedTokenDto } from '../users/dto/decoded-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -59,7 +60,8 @@ export class AuthController {
       username: findUser.username,
     }
     const accessToken = await this.jwtService.signAsync(tokenPayload)
-    const authInfo: AuthInfoDto = { userId: findUser.id, username: findUser.username, role: findUser.role, archCollAuth: accessToken }
+    const decodedToken: DecodedTokenDto = await this.jwtService.decode(accessToken)
+    const authInfo: AuthInfoDto = { userId: findUser.id, username: findUser.username, role: findUser.role, archCollAuth: accessToken, expireIn: decodedToken.exp }
     response.status(HttpStatus.OK).send(authInfo)
   }
 }

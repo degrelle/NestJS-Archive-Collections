@@ -14,6 +14,7 @@ import { Comics } from './comics/comics.entity';
 import { CategoriesModule } from './categories/categories.module';
 import { Category } from './categories/entities/category.entity';
 import { BoardgamesModule } from './boardgames/boardgames.module';
+import { Boardgame } from './boardgames/entities/boardgame.entity';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { BoardgamesModule } from './boardgames/boardgames.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User, Comics, Category],
+        entities: [User, Comics, Category, Boardgame],
         synchronize: false
       }),
       inject: [ConfigService]
